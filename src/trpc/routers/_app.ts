@@ -2,19 +2,20 @@ import { email, z } from 'zod';
 import { baseProcedure, createTRPCRouter } from '../init';
 import { invokePayloadSchema } from 'inngest/components/InngestStepTools';
 import { inngest } from '@/inngest/client';
+import { Value } from '@radix-ui/react-select';
 export const appRouter = createTRPCRouter({
   invoke : baseProcedure
     .input(
 
       z.object({
-        text: z.string(),
+        value: z.string(),
       })
     )
     .mutation(async({input})=>{
       await inngest.send({
         name:"test/hello.world",
         data: {
-          email: input.text,
+          value: input.value,
         }
       })
 
