@@ -2,13 +2,14 @@ import {   openai, createAgent, createTool } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import {Sandbox} from "@e2b/code-interpreter"
 import { stepsSchemas } from "inngest/api/schema";
-import { getSanbox } from "./utils";
+import { getSanbox, lastAssistantTextMessageContent } from "./utils";
 import { Command, Files } from "lucide-react";
 import { stderr, stdout } from "process";
 import {z, ZodType} from "zod";
 import { Content } from "vaul";
 import type { AnyZodType } from "@inngest/agent-kit";
 import { handler } from "next/dist/build/templates/app-page";
+import { PROMPT } from "@/prompts";
 
 
 export const helloWorld = inngest.createFunction(
@@ -21,10 +22,17 @@ export const helloWorld = inngest.createFunction(
     });
     
     
-    const summarizer = createAgent({
-      name: "summarizer",
-      system: "You are an expert summarizer.  You summarize in 2 words",
-      model: openai({ model: "gpt-4o"}),
+    const codeAgent = createAgent({
+      name: "code-agent",
+      description: "An expert coding agent",
+      system: PROMPT,
+      model: openai({ 
+        model: "gpt-4.1",
+      defaultParameters:{
+           temperature: 0.1,
+
+      }
+    }),
       tools: [
         createTool({
           name: "terminal",
@@ -118,10 +126,24 @@ export const helloWorld = inngest.createFunction(
             }
           })
          }, 
-      ]
+      ],
+      lifecycle:{
+        onResponse: async ({result, network}=> {
+          const lastAssistantMessageText= lastAssistantTextMessageContent(result);
+
+          if(lastAssistantMessageText && network){
+            if(lastAssistantMessageText.includes("<task_summary>")){
+              network.state.data.summary = lastAssistantMessageText;
+            }
+          }
+
+          return result;
+
+        }),
+      }
     }); 
 
-    const { output } = await summarizer.run(
+    const { output } = await codeAgent.run(
   `Summarize the following text: ${event.data.value}`,
 );
 const sandboxUrl = await step.run("get-sandbox-url", async()=>{
