@@ -1,4 +1,4 @@
-import {   openai, createAgent, createTool } from "@inngest/agent-kit";
+import {   openai, createAgent, createTool, createNetwork } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import {Sandbox} from "@e2b/code-interpreter"
 import { stepsSchemas } from "inngest/api/schema";
@@ -10,6 +10,7 @@ import { Content } from "vaul";
 import type { AnyZodType } from "@inngest/agent-kit";
 import { handler } from "next/dist/build/templates/app-page";
 import { PROMPT } from "@/prompts";
+import { nextTest } from "next/dist/cli/next-test";
 
 
 export const helloWorld = inngest.createFunction(
@@ -143,8 +144,20 @@ export const helloWorld = inngest.createFunction(
       }
     }); 
 
-    const { output } = await codeAgent.run(
-  `Summarize the following text: ${event.data.value}`,
+    const network= createNetwork({
+      name:"coding-agent-network",
+      agents: [codeAgent],
+      maxIter: 15,
+      router: async({network})=>{
+        const summary = network.state.data.summary;
+        if (summary){
+          return;
+        }
+        return codeAgent;
+      }
+    })
+
+   const result = await network.run(event.data.value);
 );
 const sandboxUrl = await step.run("get-sandbox-url", async()=>{
   const sandbox= await getSanbox(sandboxId);
@@ -153,6 +166,11 @@ const sandboxUrl = await step.run("get-sandbox-url", async()=>{
 })
    
 
-    return { output, sandboxUrl };
+    return {  
+      url: sandboxUrl,
+      title: "Fragment",
+      files: result.state.data.files,
+      summary: result.state.data.summary,  
+    };
   },
 );
