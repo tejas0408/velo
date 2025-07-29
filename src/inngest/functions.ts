@@ -7,16 +7,16 @@ import { Command, Files } from "lucide-react";
 import { stderr, stdout } from "process";
 import {z, ZodType} from "zod";
 import { Content } from "vaul";
-import type { AnyZodType } from "@inngest/agent-kit";
 import { handler } from "next/dist/build/templates/app-page";
 import { PROMPT } from "@/prompts";
 import { nextTest } from "next/dist/cli/next-test";
+import { ZodTypeAny } from "inngest/helpers/validators/zod";
+
+
 
 
 export const helloWorld = inngest.createFunction(
-  { id: "hello-world" },
-  { event: "test/hello.world" },
-  async ({ event, step }) => {
+   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async()=>{
     const sandbox = await Sandbox.create(""); 
     return sandbox.sandboxId;
@@ -40,7 +40,9 @@ export const helloWorld = inngest.createFunction(
           description: "use this terminal to run commands",
           parameters : z.object({
             command: z.string(),
-          }),
+          })as ZodTypeAny
+          
+
           handler: async ({command}, {step})=> {
             return await step?.run ("terminal", async()=>{
               const buffers= {stdout: "", stderr:""};
