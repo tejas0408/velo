@@ -1,0 +1,5 @@
+services:
+  app:
+    image: node:20-alpine
+    platform: linux/amd64
+    command: ["node", "--version"]

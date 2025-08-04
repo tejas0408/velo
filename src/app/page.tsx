@@ -15,5 +15,7 @@ const Page=  ()=>{
         Invoke background job
       </Button>
     </div>
-  )
-}
+  );
+};
+
+export default Page;
