@@ -1,5 +1,6 @@
 # You can use most Debian-based base images
-FROM node:21-slim
+FROM node:22-slime
+
 
 # Install curl
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*

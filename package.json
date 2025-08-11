@@ -2,6 +2,20 @@
   "name": "velocity",
   "version": "0.1.0",
   "private": true,
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "keywords": [],
+  "homepage": "https://github.com/tejas0408/velo#readme",
+  "bugs": {
+    "url": "https://github.com/tejas0408/velo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejas0408/velo.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -53,11 +67,11 @@
     "inngest": "^3.40.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.525.0",
-    "next": "15.4.2",
+    "next": "^15.4.6",
     "next-themes": "^0.4.6",
-    "react": "19.1.0",
+    "react": "^19.1.1",
     "react-day-picker": "^9.8.0",
-    "react-dom": "19.1.0",
+    "react-dom": "^19.1.1",
     "react-hook-form": "^7.60.0",
     "react-resizable-panels": "^3.0.3",
     "recharts": "^2.15.4",
