@@ -20,10 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+     "types": ["node"] 
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
-"types": ["debug"],
-"$schema": "https://json.schemastore.org/tsconfig"
+  "$schema": "https://json.schemastore.org/tsconfig"
 }
